@@ -13,3 +13,5 @@ Franka_Robot:
 
 Leverage ROS2 middleware to control a virtual robot in the Isaacsim Environment
 ![alt text](<Franka_Robot/images/Screenshot from 2024-08-26 16-07-06.png>)
+
+Please refer the respective folders for more info
