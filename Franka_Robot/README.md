@@ -1,10 +1,13 @@
 # Franka_Robot
 
 This is a part of my Master thesis. 
+
 Aim: To compare differnt motion planning algorithm with Cumotion Motion Planning library
+
+
 Cumotion or Curobo is a CUDA accelerated library, developed by NVIDIA, containing a suite of robotics algorithms leveraging parallel compute.
 
-this project is to uses Isaacsim simulation platform to manipulate a robot through ROS2 middleware.
+This project is to uses Isaacsim simulation platform to manipulate a robot through ROS2 middleware.
 
 Scene setup:
 1. Isaac Sim GUI with Franka Panda robot.
@@ -21,13 +24,15 @@ Procedure:
 6. A custom code is run to communicate with move_group and MoveitInterface to Manipulate the robot 
 7. The robot motion ins visualized in Isaac Sim and Rviz GUI
 
-The planning can be done by using RViz GUI.
+The planning can be done by using RViz GUI:
 1. Select the planning pipeline and the planner id from Context Tab
 2. Set the goal pose by dragging the robot arm and click plan.
 3. The generated plan can be seen in the GUI
-4. Click execute to execute the generated tarjectory in both RViz GUI and IsaacSim GUI
+4. Click execute to execute the generated tarjectory in both RViz GUI and IsaacSim GUI. 
+
 This is how the communication takes place between Moveit!, RViz and IsaacSim:![alt text](<images/Screenshot from 2024-08-26 16-12-39.png>)
-I developed a custom node that communicates with move_group node through Moveitinteface.
+
+I developed a custom node that communicates with move_group node through Moveitinteface:
 1. Include 'move_group_interface' so the the code directly communicatres with the required topics that are subscribed by Moveit!
 2. Set the 'planning pipeline id' and 'planner id' to 'move_group_interface'
 3. Define a 'target pose' and set it 'move_group_interface'
@@ -40,7 +45,8 @@ I developed a custom node that communicates with move_group node through Moveiti
 The communication between the ndoes can be visualised as: 
 ![alt text](images/rosgraph_mv.png)
 
-The simuation looks like this: https://youtu.be/_O5hBJp4P28
+The simulation looks like this: https://youtu.be/_O5hBJp4P28
+
 Next steps:
 1. To set up different parameters for comparision
 2. Set up dynamic object collision avoidance
