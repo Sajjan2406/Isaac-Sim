@@ -26,22 +26,25 @@ Procedure:
 6. A custom code is run, to communicate with 'move_group' and 'MoveitInterface', to Manipulate the robot.
 7. The robot motion is visualized in Isaac Sim and Rviz GUI
 
-The planning can be done solely by using RViz GUI:
+**Planning with RViz GUI**:
 1. Select the planning pipeline and the planner id from Context Tab
 2. Set the goal pose by dragging the robot arm and click plan.
 3. The generated plan can be seen in the GUI
 4. Click execute to execute the generated tarjectory in both RViz GUI and IsaacSim GUI. 
 
+
 This is how the communication takes place between Moveit!, RViz and IsaacSim:![alt text](<images/Screenshot from 2024-08-26 16-12-39.png>)
 
+**Custom Node Development**:
+
 I developed a custom node that communicates with 'move_group' node through 'Moveitinteface':
-1. Include 'move_group_interface' so the the code directly communicates with the required topics that are being subscribed by Moveit!
-2. Set the 'planning pipeline id' and 'planner id' to 'move_group_interface'
-3. Define a 'target pose' and set it 'move_group_interface'
-4. Tell moveit tp plan the trajectory to the 'target pose'
+1. Include 'move_group_interface' so the the code directly communicates with the required topics that are being subscribed by Moveit!.
+2. Set the 'planning pipeline id' and 'planner id' to 'move_group_interface'.
+3. Define a 'target pose' and set it 'move_group_interface'.
+4. Tell moveit tp plan the trajectory to the 'target pose'.
 5. Execute the tajectory if the planning is successful.
 6. Build and run the code as a ROS2 node by specifying the 'planning pipeline id' and 'planner id' in the CLI.  
-Planning can be visualised in Rviz GUI. Execution is visualised in both RViz and Isaac sim GUI
+7. Visualise the planning in RViz GUI. The execution is visualised in both RViz and Isaac sim GUI.
 
 The communication between the nodes can be visualised as: 
 ![alt text](images/rosgraph_mv.png)
