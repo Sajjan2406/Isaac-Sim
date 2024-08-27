@@ -1,6 +1,6 @@
 # Isaac-Sim
 
-This Folder shows the usage of Isaac sim simualtino Software for various applications
+This project leverages 'Isaac Sim' simualtion Software for various applications
 
 Application 1:
 
