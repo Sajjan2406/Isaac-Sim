@@ -2,7 +2,7 @@
 
 This is a part of my Master thesis. 
 
-Aim: 
+## Aim: 
 1. To study and implement Cumotion Motion Planning library
 2. To compare different motion planning algorithms 
 
@@ -11,13 +11,13 @@ Cumotion or Curobo is a CUDA accelerated library, developed by NVIDIA, containin
 
 This project is to uses Isaacsim simulation platform to manipulate 'Franka Panda' robot through ROS2 middleware.
 
-Scene setup:
+## Scene setup:
 1. Isaac Sim GUI with Franka Panda robot.
 2. RViz GUI with Franka Panda robot.
 ![alt text](<images/Screenshot from 2024-08-26 16-07-06.png>)
 The scene is setup by referencing this tutorial : https://nvidia-isaac-ros.github.io/concepts/manipulation/cumotion_moveit/tutorial_isaac_sim.html
 
-Procedure:
+## Procedure:
 1. NVIDIA Isaac Ros repository is cloned into the workspace
 2. Docker container is built and dependencies are installed
 3. A python script is used to spwan the Franka Panda Robot along with the necessary ROS2 action graphs, to communicate with ROS2 topics. 
@@ -48,9 +48,9 @@ I developed a custom node that communicates with 'move_group' node through 'Move
 
 The communication between the nodes can be visualised as: 
 ![alt text](images/rosgraph_mv.png)
-
+## Simulation
 The simulation looks like this: https://youtu.be/_O5hBJp4P28
 
-Next steps:
+## Next steps:
 1. To set up different parameters for comparision
 2. Set up dynamic object collision avoidance
