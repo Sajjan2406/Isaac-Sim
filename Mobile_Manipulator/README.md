@@ -31,9 +31,20 @@ Keyboard Control:
 3. Click Play to see the simulation
 
 The Action Graph set up can be seen below: 
-![alt text](<images/capture.2024-08-26 14.33.13.png>)
+![alt text](<images/capture.2024-08-26 14.33.13.png>)  
+The simulation can be seen here:  https://youtu.be/21WPmkZWuHA
+To have a 1st person POV, check this one out: https://youtu.be/zSoryHLmI6Q
 
 Co-ordinate Controlled:
  Building the Graph:
-1.  
+1. A prim 'TargetXform' is added. This will be used as the target for the 'STR'
+2. The action graph is setup like the image below:
+![alt text](<images/Screenshot from 2024-08-27 10-46-11.png>)
+3. The coordinates of the 'TargetXform' is manually passed through 'constant Vector3f' node.
+4. This value is utilized by 'Quintic Path Planner' node and sends the signal to 'Stanley Control PID' node to steer to the target
+5. 'Check GOal 2D' node checks if the goal is reahched and sends the message to PID controller
+6. Odometry values are also passed
+7. All these info are processesd and sent to 'Diifernetial Controller' and later 'Articulation Controller' moves the STR to the target
+
+The simulation can be seen here:  https://youtu.be/kyLfHsvM13Q
 
