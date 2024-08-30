@@ -46,6 +46,6 @@ For a 1st person POV, check this one out: https://youtu.be/zSoryHLmI6Q
 5. 'Check Goal 2D' node checks if the goal is reahched and sends the message to PID controller
 6. Odometry values are also passed to the PID control
 7. All this information is processed and sent to the `Differential Controller`, which then passes the commands to the `Articulation Controller` to move the STR to the target.
-8. 
+
 The simulation can be seen here:  https://youtu.be/kyLfHsvM13Q
 
