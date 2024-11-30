@@ -3,14 +3,24 @@
 This is a part of my Master thesis. 
 
 ## Aim: 
-1. To study and implement Cumotion Motion Planning library
-2. To compare different motion planning algorithms 
+1. To analyse the performance of Nvidia Cumotion motion planning algorithms 
+2. To integrate NVIDIA Issac Sim(physics based smulation platform) and ROS2(a robotics middleware framework)
 
 
 Cumotion or Curobo is a CUDA accelerated library, developed by NVIDIA, containing a suite of robotics algorithms leveraging parallel compute.
 
 This project is to uses Isaacsim simulation platform to manipulate 'Franka Panda' robot through ROS2 middleware.
 
+## Integration of IssacSim with ROS2
+One of the recommended ways to execute the trajectories calulated by moveit on to the simulation software is to use ros2_control framework. This framework connects ‘Control Alogirthms’ with ‘Hardware Drivers’. To make ros2_control communicate with ‘IsaacSim’, ‘topic_based_ros2_control’ plugin is introduced.This ‘topic_based_ros2_control’ plugin provides a hardware interface, of ’system’ type component,that subscribes and publishes on configured topics to recieve the control commands and publishe the current state of the robot. It suppports command and state interfaces through ROS2 topic communication layer.  ros2_control publishes the ‘joint_commands’, recieved from moveit2 froamework,on to
+‘isaacs_joint_commands’ topic and tracks the ‘joint_states’ from ‘isaacs_joint_states’ topic.
+
+IsaacSim environmemnt is loaded with enabling the ROS2 bridge paackge through the ’omni.isaac.ros2_bridge’ extension. Inside the IsaacSim environment a OmniGraph(as explained in the
+section 5.1) is configured to communicate with ROS2. The Figure 9 explins the Action Graph contruction.
+
+## Integration of Cumotion pipeline with Moveit2 framework
+The cumotion pipeline is appended to the to ‘planning pipelines’, along with other pipelines, of Moveit2 during its launch. To access the capabilites of cuMotion planner, a ‘CumotionAc-
+tionServer’ is launched along side the move_group node. This server acts a an action server for moveit listenig to the planning requests coming from the Moveit Clients
 ## Scene setup:
 1. Isaac Sim GUI with Franka Panda robot.
 2. RViz GUI with Franka Panda robot.
