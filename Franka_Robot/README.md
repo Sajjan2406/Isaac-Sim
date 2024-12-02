@@ -1,55 +1,99 @@
 # Franka_Robot
 
-This is a part of my Master thesis. 
+This repository contains the implementation and results of my Master’s thesis. 
 
-## Aim: 
-1. To analyse the performance of Nvidia Cumotion motion planning algorithms 
-2. To integrate NVIDIA Issac Sim(physics based smulation platform) and ROS2(a robotics middleware framework)
+## Aim
+1. To analyze the performance of **NVIDIA cuMotion** motion planning algorithms.
+2. To integrate **NVIDIA Isaac Sim** (a physics-based simulation platform) with **ROS2** (a robotics middleware framework).
+
+---
+
+## Background
+
+**cuMotion (or cuRobo)** is a CUDA-accelerated library developed by NVIDIA. It provides a suite of robotics algorithms that leverage parallel computation to improve performance.
+
+The project uses **Isaac Sim** as a simulation platform to manipulate the **Franka Panda** robot via the **ROS2 middleware**. The **Isaac Sim** environment is configured with the **ROS2 bridge package** through the `omni.isaac.ros2_bridge` extension. Within this environment:
+- An **Action Graph**  facilitates communication with ROS2.
+- **Action Graph construction** is visualized in Figure below.
+![Figure 1: Action Graph Construction](<Franka_Robot/images/Action_Graph_Panda.png>)
+
+Two robots are utilized in the project:
+1. **Franka Panda** for manipulation tasks.
+2. **Idealworks iw.hub** robot for mobile platform tasks.
+![Figure 1: Mobile Manipulator](<Franka_Robot/images/Franka_Mobile_manipulator.png>)
+
+---
+
+## Benchmarking Scenarios
+
+The project evaluates the performance of the **cuMotion** pipeline against the **OMPL** pipeline in three scenarios. Each scenario involves the robot moving from a collision-free initial state(IS) to intermediate(IT) and final target(FT) states.
+
+### 1. Narrow Tunnel
+- **Setup**: Targets are placed on either side of a narrow tunnel.
+- **Objective**: The robot can either navigate from **IS** through the tunnel or avoid it to reach the **IT** and **FT** pose.
+![Figure 1: Mobile Manipulator in Narrow Tunnel Scene](<Franka_Robot/images/NT_Franka.png>)
+### 2. Library Scene
+- **Setup**: A scene with a bookshelf and a table, with the robot positioned between them.
+- **Objective**:
+  - Move from **IS**  to the top shelf (**IT**).
+  - Proceed under the table (**FT**).
+![Figure 2: Mobile Manipulator in Library Scene](<Franka_Robot/images/L_Franka.png>)
+### 3. Factory Scene
+- **Setup**: A rack and two containers define the scene.
+- **Objective**:
+  - Move from the **IS** to the middle section of the rack (**IT**).
+  - Proceed to the first container (**FT**).
+![Figure 3: Factory Scene](<Franka_Robot/images/Factory Scene.png>)
+---
+
+## Evaluation Metrics
+
+The performance of the motion planning pipelines is analyzed using the following metrics:
+
+1. **C-Space Path Length**: 
+   - The length of the path traversed in configuration space.
+   
+2. **Mean Velocity**:
+   - The average speed of the robot's end-effector or a point of interest along the path.
+
+3. **Maximum Acceleration**:
+   - The highest rate of change of velocity along the planned path.
+
+4. **Maximum Jerk**:
+   - The maximum rate of change of acceleration.
+
+5. **Full Pipeline Time**:
+   - The total time from the start of motion planning to the completion of the path execution.
+
+Each planner and planning scene is tested over **5 iterations**. The planned trajectories are visualized in **RViz**, while the robot's motion is observed in **Isaac Sim**.
+
+---
 
 
-Cumotion or Curobo is a CUDA accelerated library, developed by NVIDIA, containing a suite of robotics algorithms leveraging parallel compute.
+## Results and Discussion
 
-This project is to uses Isaacsim simulation platform to manipulate 'Franka Panda' robot through ROS2 middleware.
+It is observed that **cuMotion** produces shorter paths compared to **OMPL** across all scenes. On average, **cuMotion** reduces the path length by —% when compared to **OMPL**, as shown in **Figure 4**.
 
-IsaacSim environmemnt is loaded with enabling the ROS2 bridge paackge through the ’omni.isaac.ros2_bridge’ extension. Inside the IsaacSim environment a OmniGraph(as explained in the
-section 5.1) is configured to communicate with ROS2. The Figure 9 explins the Action Graph contruction.
+![Figure 4: Configuration Space](<Franka_Robot/images/C Space.png>)
 
-The robots used are Franka Panda for manipulaton and Idealworks iw.hub robot for mobile platform
-The project uses 2 benchmarking scenes and a factory scene(refer the figures) to analyse the performance of the cuMotion pipeline with OMPL pipeline.the queries are such that the robot starts from its non-collission intial state. From this state it moves to the first target and then to the final target. 
-1. Narrow Tunnel
-  a. The targets are on both sides of the tunnel walls. The robot can move move through the the tunnel or avoid it to reach the final target pose.
-3. Library Scene: Contains a Bookshelf and a table and the robot is placed in between them.
-  a. the robot needs to move from the intial Position to the Top shelf(First Target) and then under the table(Final Target)
-5. Fctory Scene: Containes a rack and two Containers
-  a. The robot has to avoid obstacles and move from intial non collisios state to middle section of the rack(First Target) and then to the container(Final Target)
+The maximum jerk along the trajectory across all joints and scenes is shown in **Figure 5**. The results indicate that the maximum jerk experienced with **cuMotion** is — times lower than that of **OMPL**.
 
-##Evaluation of trajectory generation performance
-The parameters analysed are:
-1. C Space Path Length:  The length of the path that a robot takes in the configuration space
-2. Mean Velocity:  The average speed at which the robot’s end-effector or a particular point of interest on the robot moves along the path
-3. Max Accelaration:  The highest rate of change of velocity that the robot experiences along the planned path.
-4. Max jerk:  The maximum rate of change of acceleration
-5. Full Pipeline Time: the total time from the start of the motion planning process to the completion of the execution of the generated path.
+![Figure 5: Jerk Analysis](<Franka_Robot/images/Jerk.png>)
 
-The experiment is conducted for 5 iterations for each planner and planning scene. The planned trajectory for the robot is it is visualised in the RViz and the robot motion in IsaacSim
+As shown in **Figure 6**, the average time **cuMotion** takes to plan and produce trajectories, as well as execute robot motions, is **1.53 times lower** compared to **OMPL**.
 
-##Results and Discussion
+![Figure 6: Time Analysis](<Franka_Robot/images/Full Time.png>)
 
-It is observed that cuMotion produces shorter path as compared to OMPL in all the Scenes. cuMotion reduces the path length by —percentage on an average when compared to OMPL
+**OMPL** exhibits the highest maximum acceleration values compared to **cuMotion**. As visualized in **Figure 7**, trajectories generated by **cuMotion** show an average **50% lower maximum acceleration** than those generated by **OMPL**.
 
+![Figure 7: Acceleration Analysis](<Franka_Robot/images/Acceleration.png>)
 
-The maximum jerk along the trajecotry across all joints across all Scenes are shown in the Figure 38. The maximum jerk experienced with cuMotion is – time lesser than the maximum jerk OMPL has
+Even with the smallest maximum acceleration, **cuMotion** achieves a mean velocity comparable to **OMPL**, as shown in **Figure 8**. The mean velocity produced by **cuMotion** is slightly higher by **0.01 rad/s** on average, and **1.35 times higher** compared to **OMPL**.
 
-As seen in the figure 39 the average time cuMotion takes to plan and produce trajectories and execute the robot motion is 1.53 times lower when compared to OMPL
+![Figure 8: Velocity Analysis](<Franka_Robot/images/Velocity.png>)
 
-OMPL has the largest values in maximum accelration as compared to cuMotion. it can be visulised from the Figure 39 cuMotion generates the trajectories that have around 50% on an average lower maximum acceleration than the trajectories generated by OMPL
-
-Even with the samllest maximum acceleration, cuMotion’s mean velocity is comparable to OMPL. It is slightly higher by 0.01 rad/s on an average. The mean velcities produced by cuMotion are 1.35 times higer as compared with OMPL
 
 
 ## Simulation
 The simulation looks like this: https://youtu.be/_O5hBJp4P28
 
-## Next steps:
-1. To set up different parameters for comparision
-2. Set up dynamic object collision avoidance
