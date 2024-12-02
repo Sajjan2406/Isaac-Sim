@@ -31,8 +31,6 @@ class MotionPlanningEvaluator(Node):
         # Subscribers to relevant topics 
         #self.subscription = self.create_subscription(# Message type, # Topic name, # Callback function, # QoS profile, use a queue size of 10)
         self.create_subscription(DisplayTrajectory, '/display_planned_path', self.display_planned_path_callback, 10) 
-        # self.create_subscription(String, '/trajectory_execution_event', self.trajectory_execution_event_callback, 10) 
-        #self.create_subscription(MotionPlanRequest, '/motion_plan_request', self.motion_plan_request_callback, 10) 
         self.create_subscription(GoalStatusArray, '/move_action/_action/status', self.status_callback,  10)
         self.create_subscription(GoalStatusArray,  '/execute_trajectory/_action/status',  self.execute_trajectory_status_callback,  10  )#activted during the execution time
         self.create_subscription(GoalStatusArray, '/panda_arm_controller/follow_joint_trajectory/_action/status', self.follow_joint_trajectory_status_callback, 10 ) 
@@ -56,6 +54,7 @@ class MotionPlanningEvaluator(Node):
         self.goal_reached_time = 0.0
         self.request_time = 0.0
         self.processed_goals = set()
+
         # CSV file setup 
         csv_file_path = '/workspaces/isaac_ros-dev/src/isaac_ros_cumotion/metrics_python/motion_planning_metrics.csv'
         try:
