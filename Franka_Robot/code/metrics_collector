@@ -1,0 +1,198 @@
+#!/usr/bin/env python3 
+
+""" 
+
+Script to measure various parameters and evaluate the performance of different motion planning algorithms using Franka Panda robot and MoveIt2. 
+
+""" 
+
+import time 
+import rclpy 
+import numpy as np
+from rclpy.node import Node 
+from rclpy.logging import get_logger 
+from std_msgs.msg import String 
+from moveit_msgs.msg import DisplayTrajectory 
+from moveit_msgs.msg import MotionPlanRequest 
+from moveit_msgs.action import ExecuteTrajectory 
+from action_msgs.msg import GoalStatusArray, GoalStatus
+from control_msgs.action import FollowJointTrajectory 
+from rclpy.action import ActionClient 
+import csv 
+import os
+
+class MotionPlanningEvaluator(Node): 
+
+    def __init__(self): 
+        super().__init__('motion_planning_evaluator')
+        current_working_directory = os.getcwd()
+        self.get_logger().info(f'the pwd is : {current_working_directory}') 
+
+        # Subscribers to relevant topics 
+        #self.subscription = self.create_subscription(# Message type, # Topic name, # Callback function, # QoS profile, use a queue size of 10)
+        self.create_subscription(DisplayTrajectory, '/display_planned_path', self.display_planned_path_callback, 10) 
+        # self.create_subscription(String, '/trajectory_execution_event', self.trajectory_execution_event_callback, 10) 
+        #self.create_subscription(MotionPlanRequest, '/motion_plan_request', self.motion_plan_request_callback, 10) 
+        self.create_subscription(GoalStatusArray, '/move_action/_action/status', self.status_callback,  10)
+        self.create_subscription(GoalStatusArray,  '/execute_trajectory/_action/status',  self.execute_trajectory_status_callback,  10  )#activted during the execution time
+        self.create_subscription(GoalStatusArray, '/panda_arm_controller/follow_joint_trajectory/_action/status', self.follow_joint_trajectory_status_callback, 10 ) 
+
+        # Action clients for the necessary actions
+        self.execute_trajectory_action_client = ActionClient(self, ExecuteTrajectory, '/execute_trajectory')
+        self.follow_joint_trajectory_action_client = ActionClient(self, FollowJointTrajectory, '/panda_arm_controller/follow_joint_trajectory')         
+
+
+        # Variables to store the parameters 
+        self.success = False #subscribe to rresult or status of the /move_group action or /execute_trajectory
+        self.c_space_path_length = 0.0 #subscribe to /display_planned_path
+        self.max_jerk = 0.0  #second derivate of acceleration
+        self.max_acceleration = 0.0 
+        self.mean_velocity = 0.0 
+        self.motion_time = 0.0 
+        self.solve_time = 0.0 
+        self.full_pipeline_time = 0.0 
+        self.execute_request_time = 0.0
+        self.motion_request_time = 0.0
+        self.goal_reached_time = 0.0
+        self.request_time = 0.0
+        self.processed_goals = set()
+        # CSV file setup 
+        csv_file_path = '/workspaces/isaac_ros-dev/src/isaac_ros_cumotion/metrics_python/motion_planning_metrics.csv'
+        try:
+            self.csv_file = open(csv_file_path, mode='w', newline='') 
+            self.get_logger().info('CSV opened')
+            self.csv_writer = csv.DictWriter(self.csv_file, fieldnames=[ 
+            'c_space_path_length',#'timestamp', #'success',
+            'mean_velocity', 'max_jerk', 'max_acceleration',
+            'motion_time', 'full_pipeline_time' 
+            ]) 
+            self.csv_writer.writeheader() 
+        except Exception as e:
+            self.get_logger().error(f'Error opening the csv file: {e}')
+
+        self.metrics = {}
+
+
+    def status_callback(self, msg): #success #(GoalStatusArray, '/move_action/_action/status', self.status_callback,  10)
+        current_time = self.get_clock().now().to_msg() #to ignore old messages
+        if not msg.status_list:
+            self.get_logger().info('No active goals.')
+        else:
+            for goal_status in msg.status_list:
+                if goal_status.status ==  GoalStatus.STATUS_EXECUTING:
+                    self.request_time = self.get_clock().now().to_msg().sec + self.get_clock().now().to_msg().nanosec * 1e-9 
+                    self.get_logger().info(f'Request recieved at {self.request_time}') 
+                    self.get_logger().info(f'Goal ID: {goal_status.goal_info.goal_id.uuid} Status: {goal_status.status}') 
+                if goal_status.status ==  GoalStatus.STATUS_SUCCEEDED:
+                    self.end_time = self.get_clock().now().to_msg().sec + self.get_clock().now().to_msg().nanosec * 1e-9 
+                    self.get_logger().info(f'end recieved at {self.end_time}')
+ 
+    
+                     
+    def display_planned_path_callback(self, msg): #self.create_subscription(DisplayTrajectory, '/display_planned_path', self.display_planned_path_callback, 10) 
+        
+        self.get_logger().info("Plannig Success") 
+        self.get_logger().info("Received DisplayTrajectory message") 
+             
+        self.c_space_path_length = self.calculate_c_space_path_length(msg) 
+        self.mean_velocity = self.calculate_mean_velocity(msg) 
+
+    def calculate_c_space_path_length(self, msg): 
+        path_length = 0.0
+        for trajectory in msg.trajectory:
+            for point in trajectory.joint_trajectory.points:
+                if len(point.positions) > 1:
+                    path_length += np.linalg.norm(np.diff(point.positions))
+        self.get_logger().info(f"path length: {path_length}")     
+
+        self.metrics['c_space_path_length'] = path_length
+ 
+
+    def calculate_mean_velocity(self, msg): 
+        total_velocity = 0.0
+        count = 0
+        velocities = []
+        accelerations = []
+        jerk = []        
+        for trajectory in msg.trajectory:
+            for point in trajectory.joint_trajectory.points: # Implement the logic to calculate mean velocity 
+                if point.velocities:
+                    velocities += point.velocities
+                if point.accelerations:
+                    accelerations = np.array(point.accelerations)
+            jerks = np.diff(accelerations) 
+        #mean_velocity
+        mean_velocity = np.abs(np.mean(velocities)) if velocities else 0
+        self.get_logger().info(f"mean Velocity: {mean_velocity}")
+       
+
+        #max_acceleration
+        max_acceleration = 0.0
+        max_acceleration = max(max_acceleration, np.max(np.abs(accelerations)))
+        self.get_logger().info(f"max Acleration: {max_acceleration}")
+        self.metrics['max_acceleration'] = max_acceleration
+
+        #max_jerk
+        max_jerk = 0.0
+        max_jerk = max(max_jerk, np.max(np.abs(jerks)))
+        self.get_logger().info(f"max Jerk: {max_jerk}")
+        self.metrics['max_jerk'] = max_jerk
+
+    def execute_trajectory_status_callback(self, msg): 
+            # Check if the status is 'SUCCEEDED' (status code 4) 
+            if goal_status.status ==  GoalStatus.STATUS_EXECUTING: #2: #changes: instead of goalstatusarray.status_succeeded
+                self.execute_request_time = self.get_clock().now().to_msg().sec + self.get_clock().now().to_msg().nanosec * 1e-9 
+                self.get_logger().info(f'Execute request accepted at {self.execute_request_time}')  
+
+    def follow_joint_trajectory_status_callback(self, msg): #self.create_subscription(GoalStatusArray, '/panda_arm_controller/follow_joint_trajectory/_action/status', self.follow_joint_trajectory_status_callback, 10 ) 
+        for goal_status in msg.status_list:             
+            if goal_status.status == GoalStatus.STATUS_SUCCEEDED: #4:
+                self.goal_reached_time = self.get_clock().now().to_msg().sec + self.get_clock().now().to_msg().nanosec * 1e-9 
+                self.get_logger().info(f'Goal reached at {self.goal_reached_time}') 
+                      
+        self.motion_time = self.robot_motion_time(msg)
+                    #Call function to calculate full planning time
+        self.full_pipeline_time = self.calculate_full_pipeline_time(msg) 
+
+    def robot_motion_time(self, msg):
+        motion_time = 0.0
+        if self.execute_request_time is not None: 
+                    motion_time = self.goal_reached_time - self.execute_request_time 
+                    self.get_logger().info(f'Motion time: {motion_time} seconds') 
+                                       
+        self.metrics['motion_time'] = motion_time        
+
+    def calculate_full_pipeline_time(self, msg): 
+        full_pipeline_time = 0.0
+        full_pipeline_time =  self.goal_reached_time - self.request_time 
+        self.get_logger().info(f'Pipeline Time is {full_pipeline_time}')
+        self.metrics['full_pipeline_time'] = full_pipeline_time
+        self.log_to_csv()
+    
+    def log_to_csv(self):
+        try:
+            self.csv_writer.writerow(self.metrics) #chnaged self.execute_request_time
+            self.csv_file.flush()
+            self.get_logger().info('Metrics logged into csv.')
+        except Exception as e:
+            self.get_logger().error(f'Error Writing to CSV: {e}')
+   
+def main(args=None): 
+    rclpy.init(args=args) 
+    motion_planning_evaluator = MotionPlanningEvaluator() 
+    
+    try: 
+        rclpy.spin(motion_planning_evaluator)  
+    except KeyboardInterrupt:
+        pass
+
+    finally: 
+    # Destroy the node explicitly 
+        # Close CSV file when shutting down 
+        motion_planning_evaluator.csv_file.close() 
+        motion_planning_evaluator.destroy_node() 
+        rclpy.shutdown() 
+ 
+
+if __name__ == '__main__': 
+    main() 
