@@ -31,13 +31,13 @@ The project evaluates the performance of the **cuMotion** pipeline against the *
 ### 1. Narrow Tunnel
 - **Setup**: Targets are placed on either side of a narrow tunnel.
 - **Objective**: The robot can either navigate from **IS** through the tunnel or avoid it to reach the **IT** and **FT** pose.
-![Figure 1: Mobile Manipulator in Narrow Tunnel Scene](<images/NT_Franka.png>)
+![Figure 1: Mobile Manipulator in Narrow Tunnel Scene](<images/Narrow Tunnel.png>)
 ### 2. Library Scene
 - **Setup**: A scene with a bookshelf and a table, with the robot positioned between them.
 - **Objective**:
   - Move from **IS**  to the top shelf (**IT**).
   - Proceed under the table (**FT**).
-![Figure 2: Mobile Manipulator in Library Scene](<images/L_Franka.png>)
+![Figure 3: Mobile Manipulator in Library Scene](<images/Library.png>)
 ### 3. Factory Scene
 - **Setup**: A rack and two containers define the scene.
 - **Objective**:
