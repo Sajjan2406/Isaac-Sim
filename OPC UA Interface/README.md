@@ -6,7 +6,7 @@ It reads positional data from a JSON file and updates a model's position in Isaa
 ![alttext](<images/Actuator.png>)
 
 ## Simulation Video
-The simulation video can be watched here:[Watch the Simulation Video](https://youtu.be/st5fMZlsggA)
+The simulation video can be watched [here](https://youtu.be/st5fMZlsggA)
 ## 🚀 Features
 
 - Real-time model manipulation in Isaac Sim
