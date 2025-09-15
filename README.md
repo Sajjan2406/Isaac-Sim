@@ -7,7 +7,7 @@ This project leverages **Isaac Sim** simulation Software for various application
 
 Connect **iPhysics** and **Isaac Sim** using a simulated OPC UA interface via JSON
 
-![ISaacsim_Environmet](<OPC UA Interface\images\IsaacSim_Environment.png>)
+![ISaacsim_Environmet](<OPC UA Interface/images/IsaacSim_Environment.png>)
 
 ## Application 2:
 ### Franka Mobile Manipulator:
