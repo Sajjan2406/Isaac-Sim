@@ -3,6 +3,13 @@
 This project leverages **Isaac Sim** simulation Software for various applications
 
 ## Application 1:
+### OPC UA Interface:
+
+Connect **iPhysics** and **Isaac Sim** using a simulated OPC UA interface via JSON
+
+![ISaacsim_Environmet](OPC UA Interface\images\IsaacSim_Environment.png)
+
+## Application 2:
 ### Franka Mobile Manipulator:
 
 Analyse the performance of **Motion Planning algorithms** by leveraging **ROS2** middleware to control a **virtual robot** in  **NVIDIA Isaacsim Environment**
@@ -10,7 +17,7 @@ Analyse the performance of **Motion Planning algorithms** by leveraging **ROS2**
 ![alt text](<Franka_Mobile_Manipulator/images/Franka_Mobile_manipulator.png>)
 
 
-## Application 2:
+## Application 3:
 
 ### UR 10 Mobile Manipulator: 
 
