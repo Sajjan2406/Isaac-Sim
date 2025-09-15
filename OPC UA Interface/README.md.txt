@@ -2,9 +2,11 @@
 
 This project demonstrates how to connect **iPhysics** and **Isaac Sim** using a simulated OPC UA interface via JSON. 
 It reads positional data from a JSON file and updates a model's position in Isaac Sim in real-time.
-![Actuator_in_IsaacSim](images/Actuator.png)
+
+![alttext](<images/Actuator.png>)
+
 ## Simulation Video
-The simulation video can be watched here:[![Watch the Simulation Video](https://youtu.be/st5fMZlsggA)]
+The simulation video can be watched here:[Watch the Simulation Video](https://youtu.be/st5fMZlsggA)
 ## 🚀 Features
 
 - Real-time model manipulation in Isaac Sim
