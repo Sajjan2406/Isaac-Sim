@@ -1,13 +1,15 @@
 # Mobile_Manipiulator
+## Simulation
+- [Co-ordinate Controlled Robot](https://youtu.be/kyLfHsvM13Q)
+- [Keyboard Controlled Robot](https://youtu.be/21WPmkZWuHA)
 ## Scene Setup:
-**Mobile Manipulator**: Idealworks's  STR
-**Robot arm**: Universla Robot's UR10
+- **Mobile Manipulator**: Idealworks's  STR
+- **Robot arm**: Universla Robot's UR10
 ![alt text](<images/capture.2024-08-26 13.29.50.png>)
 This Project leverages visual scripting through 'Action Graphs' to simulate the robot assembly inside a warehouse scene.
 
-The robots are imported into the warehouse environment and are rigged  as per the documentation: https://docs.omniverse.nvidia.com/isaacsim/latest/advanced_tutorials/tutorial_advanced_rigging_robot.html
+The robots are imported into the warehouse environment, rigged, and assembled as per the [documentation](https://docs.omniverse.nvidia.com/isaacsim/latest/advanced_tutorials/tutorial_advanced_rigging_robot.html)
 
-After rigging of the robot, they are assembled by following this guide : https://docs.omniverse.nvidia.com/isaacsim/latest/advanced_tutorials/tutorial_advanced_assembling_robots.html
 
 ## Procedure:
 ### Building the graph: 
@@ -33,8 +35,10 @@ Two different approach are implemented.
 
 
 ![Action Graph Keyboard Control](<images/capture.2024-08-26 14.33.13.png>)  
-Watch the simualtion here:  https://youtu.be/21WPmkZWuHA  
-For a 1st person POV, check this one out: https://youtu.be/zSoryHLmI6Q
+Watch the simualtion [here](https://youtu.be/21WPmkZWuHA  )
+
+
+For a 1st person POV, check this one [out](https://youtu.be/zSoryHLmI6Q)
 
 ### Co-ordinate Controlled:  
 
@@ -47,5 +51,8 @@ For a 1st person POV, check this one out: https://youtu.be/zSoryHLmI6Q
 6. Odometry values are also passed to the PID control
 7. All this information is processed and sent to the `Differential Controller`, which then passes the commands to the `Articulation Controller` to move the STR to the target.
 
-The simulation can be seen here:  https://youtu.be/kyLfHsvM13Q
+
+The simulation can be seen [here](https://youtu.be/kyLfHsvM13Q)
+
+
 
