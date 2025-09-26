@@ -1,33 +1,27 @@
-# Isaac Sim + iPhysics Integration via JSON (OPC UA Prep)
+# Isaac Sim Python Interface for iPhysics Integration (OPC UA Prep)
 
-This project demonstrates how to connect **iPhysics** and **Isaac Sim** using a simulated OPC UA interface via JSON. 
-It reads positional data from a JSON file and updates a model's position in Isaac Sim in real-time.
+This project demonstrates how to use Python extensions within Isaac Sim to simulate real-time communication with external softwares. Positional data is read from a JSON file and used to update the actuator model's position inside Isaac Sim. This setup serves as a prototype for future OPC UA integration.
 
-![alttext](<images/Actuator.png>)
+![Actuator in IsaacSim](<images/Actuator.png>)
 
 ## Simulation
-The manipulation of the Actuator's Digital Twin via the positional data from the **JSON** file can be watched [here](https://youtu.be/st5fMZlsggA)
-
-## 🚀 Features
-
-- Real-time model manipulation in Isaac Sim
-- JSON-based simulation of OPC UA data
-- Non-blocking update loop using Isaac Sim's event stream
-- Easy to extend to OPC UA client
+Watch the simulation of model manipulation in Isaac Sim using Python [here](https://youtu.be/st5fMZlsggA)
 
 ## 📁 Project Structure
-- `scripts/update_position.py`: Main script to read JSON and update model
-- `data/Translation.json`: Sample data file with position and rotation
-- `docs/architecture.md`: System overview and future OPC UA roadmap
-- `USD/Actuator.usd`: Actuator usd file used in the project
+- `scripts/Actuator_position.py`: Python script to read JSON and update model position
+- `data/Translation.json`: Sample data file containing position and rotation values
+- `docs/architecture.md`: System overview and roadmap for OPC UA integration
+- `USD/Actuator.usd`: Actuator USD file used in the simulation
 
 ## 🛠 Requirements
-
 - Isaac Sim 4.5+
 - Python (use Isaac Sim's built-in interpreter)
 
 ## 📈 Next Steps
+- Replace JSON input with live OPC UA client using the `opcua` Python library
+- Add support for rotation and velocity updates
+- Build a UI panel in Isaac Sim for manual control and debugging
 
-- Replace JSON with OPC UA client using `opcua` Python library
-- Add rotation support
-- Build a UI panel in Isaac Sim for manual control
+---
+
+This project was developed during my internship at **Krones**, focusing on Python-based simulation interfaces and preparing for industrial OPC UA communication workflows.
