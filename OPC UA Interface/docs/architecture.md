@@ -30,7 +30,7 @@ Importantly, Isaac Sim is not used solely for visualization — it hosts a funct
     - Updates object states in Isaac Sim via its Python API.
 
 ## Data Flow
-![Workflow Diagram](images/WorkFlow.png)
+![Workflow](<images/WorkFlow.png>)
 ## Future Roadmap
 
 - Integrate real OPC UA server
