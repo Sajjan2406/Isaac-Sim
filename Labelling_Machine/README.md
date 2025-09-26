@@ -1,5 +1,6 @@
 # Labelling Machine
-This project showcases the simulation of a labelling machine using NVIDIA Isaac Sim and Blender   
+This project showcases the simulation of a labelling machine using NVIDIA Isaac Sim and Blender
+![Label Machine](<images/Labelling_machine.png>)
 
 ## Simulation
 The Label Machine Movement and the Label Movement can be watched [here](https://youtu.be/-9jzKmZ5iok)
@@ -12,4 +13,5 @@ The Label Machine Movement and the Label Movement can be watched [here](https://
 - **Simulation Platform**: NVIDIA Isaac Sim  
 - **Modeling Tool**: Blender  
 - **File Format**: USD (Universal Scene Description) 
+
 
