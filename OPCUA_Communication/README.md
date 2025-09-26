@@ -20,8 +20,8 @@ Watch the actuator's digital twin being manipulated via positional data from iPh
 ![alttext](<images/iPhysics.png>)
 
 - **Isaac Sim** acts as the **OPC UA client**, reading this data and updating the actuator's position in real-time, using a Python script built with the Isaac Sim API
-
 ![alttext](<images/IsaacSim.png>)
+
 
 
 
